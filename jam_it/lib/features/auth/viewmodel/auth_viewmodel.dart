@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:jam_it/core/providers/current_user_notifier.dart';
 import 'package:jam_it/features/auth/model/user_model.dart';
 import 'package:jam_it/features/auth/repositories/auth_local_repository.dart';
 import 'package:jam_it/features/auth/repositories/auth_remote_repository.dart';
@@ -10,12 +11,18 @@ part 'auth_viewmodel.g.dart';
 class AuthViewModel extends _$AuthViewModel {
   late AuthRemoteRepository _authRemoteRepository;
   late AuthLocalRepository _authLocalRepository;
+  late CurrentUserNotifier _currentUserNotifier;
 
   @override
   AsyncValue<UserModel>? build() {
     _authRemoteRepository = ref.watch(authRemoteRepositoryProvider);
     _authLocalRepository = ref.watch(authLocalRepositoryProvider);
+    _currentUserNotifier = ref.watch(currentUserNotifierProvider.notifier);
     return null;
+  }
+
+  Future<void> initSharedPreference() async {
+    await _authLocalRepository.init();
   }
 
   Future<void> signUpUser({
@@ -53,8 +60,10 @@ class AuthViewModel extends _$AuthViewModel {
     );
 
     final val = switch (res) {
-      Left(value: final l) => state =
-          AsyncValue.error(l.message, StackTrace.current),
+      Left(value: final l) => state = AsyncValue.error(
+          l.message,
+          StackTrace.current,
+        ),
       Right(value: final r) => _loginUser(r),
     };
 
@@ -63,11 +72,8 @@ class AuthViewModel extends _$AuthViewModel {
 
   AsyncValue<UserModel>? _loginUser(UserModel user) {
     _authLocalRepository.setToken(user.token);
+    _currentUserNotifier.addUser(user);
     return state = AsyncValue.data(user);
-  }
-
-  Future<void> initSharedPreference() async {
-    await _authLocalRepository.init();
   }
 
   Future<UserModel?> getData() async {
@@ -81,11 +87,16 @@ class AuthViewModel extends _$AuthViewModel {
             l.message,
             StackTrace.current,
           ),
-        Right(value: final r) => AsyncValue.data(r),
+        Right(value: final r) => _getDataSuccess(r),
       };
 
       return val.value;
     }
     return null;
+  }
+
+  AsyncValue<UserModel> _getDataSuccess(UserModel user) {
+    _currentUserNotifier.addUser(user);
+    return state = AsyncValue.data(user);
   }
 }
