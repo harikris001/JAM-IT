@@ -2,22 +2,28 @@ import 'package:flutter/material.dart';
 
 class CustomField extends StatelessWidget {
   final String hintext;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final bool? isHiddenText;
+  final bool? isReadOnly;
+  final VoidCallback? onTap;
 
   const CustomField({
+    this.isReadOnly,
     super.key,
     required this.hintext,
-    required this.controller,
+    this.controller,
     this.isHiddenText,
+    this.onTap,
   });
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onTap: onTap,
+      readOnly: isReadOnly ?? false,
       obscureText: isHiddenText ?? false,
       controller: controller,
       decoration: InputDecoration(
-        labelText: hintext,
+        hintText: hintext,
       ),
       validator: (val) {
         if (val!.trim().isEmpty) {
