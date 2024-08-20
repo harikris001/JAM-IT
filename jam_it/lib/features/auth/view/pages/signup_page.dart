@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jam_it/core/Loader/loader.dart';
+import 'package:jam_it/core/widgets/Loader/loader.dart';
 import 'package:jam_it/core/theme/app_pallete.dart';
 import 'package:jam_it/core/widgets/custom_field.dart';
 import 'package:jam_it/features/auth/view/widgets/auth_button.dart';
@@ -30,7 +30,8 @@ class _SignupPageState extends ConsumerState<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(authViewModelProvider)?.isLoading == true;
+    final isLoading = ref.watch(
+        authViewModelProvider.select((value) => value?.isLoading == true));
 
     ref.listen(
       authViewModelProvider,

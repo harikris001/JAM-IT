@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jam_it/core/Loader/loader.dart';
+import 'package:jam_it/core/widgets/Loader/loader.dart';
 import 'package:jam_it/core/theme/app_pallete.dart';
 import 'package:jam_it/core/utils/utils.dart';
 import 'package:jam_it/core/widgets/custom_field.dart';
 import 'package:jam_it/features/auth/view/widgets/auth_button.dart';
 import 'package:jam_it/features/auth/viewmodel/auth_viewmodel.dart';
+import 'package:jam_it/features/home/view/pages/home_page.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -28,14 +29,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(authViewModelProvider)?.isLoading == true;
+    final isLoading = ref.watch(
+        authViewModelProvider.select((value) => value?.isLoading == true));
 
     ref.listen(
       authViewModelProvider,
       (_, next) {
         next?.when(
           data: (data) {
-            snackBarPopUp(context, "Login Sucessfull");
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
+              (_) => false,
+            );
           },
           error: (error, stackTrace) {
             snackBarPopUp(context, error.toString());
@@ -86,7 +92,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       buttonText: 'Log In',
                       onTap: () async {
                         if (formkey.currentState!.validate()) {
-                          ref.read(authViewModelProvider.notifier).loginUser(
+                          await ref
+                              .read(authViewModelProvider.notifier)
+                              .loginUser(
                                 email: emailController.text,
                                 password: passwordController.text,
                               );
