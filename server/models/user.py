@@ -1,4 +1,5 @@
 from sqlalchemy import TEXT, VARCHAR, Column, LargeBinary
+from sqlalchemy.orm import relationship
 from models.base import Base
 
 
@@ -9,3 +10,5 @@ class User(Base):
     name = Column(VARCHAR(255))
     email = Column(VARCHAR(255))
     password = Column(LargeBinary)
+
+    favourites = relationship('Favourite', back_populates="favourites")
