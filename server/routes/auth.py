@@ -8,7 +8,7 @@ import bcrypt
 import uuid
 import jwt
 import os
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 
 
@@ -46,7 +46,7 @@ def login(user: UserLogin, db: Session=Depends(get_db)):
 
 @router.get('/')
 def current_user(db: Session = Depends(get_db), user_dict = Depends(auth_middleware)):
-    user = db.query(User).filter(User.id == user_dict['uid']).first()
+    user = db.query(User).filter(User.id == user_dict['uid']).options(joinedload(User.favourites)).first()
 
     if not user:
         raise HTTPException(404, 'User not found!')
