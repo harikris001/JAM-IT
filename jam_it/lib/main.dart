@@ -7,6 +7,7 @@ import 'package:jam_it/features/auth/view/pages/login_page.dart';
 import 'package:jam_it/features/auth/view/pages/signup_page.dart';
 import 'package:jam_it/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:jam_it/features/home/view/pages/home_page.dart';
+import 'package:jam_it/features/auth/view/pages/splash_screen.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -44,7 +45,7 @@ class JamIt extends ConsumerWidget {
       title: 'Jam-IT',
       theme: AppTheme.darkThemeMode,
       debugShowCheckedModeBanner: false,
-      home: currenUser == null ? const SignupPage() : const HomePage(),
+      home: currenUser == null ? const SplashScreen() : const HomePage(),
     );
   }
 }

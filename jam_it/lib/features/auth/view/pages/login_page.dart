@@ -5,6 +5,7 @@ import 'package:jam_it/core/theme/app_pallete.dart';
 import 'package:jam_it/core/utils/utils.dart';
 import 'package:jam_it/core/widgets/custom_field.dart';
 import 'package:jam_it/features/auth/view/widgets/auth_button.dart';
+import 'package:jam_it/features/auth/view/widgets/hero_image.dart';
 import 'package:jam_it/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:jam_it/features/home/view/pages/home_page.dart';
 
@@ -63,13 +64,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Jam-IT',
-                      style: TextStyle(
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    const HeroImage(),
                     const SizedBox(
                       height: 35,
                     ),
@@ -124,6 +119,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             ),
                           ],
                         ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text(
+                      "A CrowdSource Intiative",
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Pallete.subtitleText,
+                        fontWeight: FontWeight.w200,
                       ),
                     ),
                   ],
