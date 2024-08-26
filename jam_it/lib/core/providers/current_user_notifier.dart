@@ -1,4 +1,4 @@
-import 'package:jam_it/features/auth/model/user_model.dart';
+import 'package:jam_it/core/models/user_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_user_notifier.g.dart';

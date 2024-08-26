@@ -1,17 +1,23 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
+import 'package:jam_it/features/home/model/fav_song_model.dart';
+
 class UserModel {
   final String token;
   final String name;
   final String email;
   final String id;
+  final List<FavSongModel> favourites;
 
   UserModel({
     required this.token,
     required this.name,
     required this.email,
     required this.id,
+    required this.favourites,
   });
 
   UserModel copyWith({
@@ -19,12 +25,14 @@ class UserModel {
     String? name,
     String? email,
     String? id,
+    List<FavSongModel>? favourites,
   }) {
     return UserModel(
       token: token ?? this.token,
       name: name ?? this.name,
       email: email ?? this.email,
       id: id ?? this.id,
+      favourites: favourites ?? this.favourites,
     );
   }
 
@@ -34,6 +42,7 @@ class UserModel {
       'name': name,
       'email': email,
       'id': id,
+      'favourites': favourites.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -43,6 +52,11 @@ class UserModel {
       name: map['name'] ?? '',
       email: map['email'] ?? '',
       id: map['id'] ?? '',
+      favourites: List<FavSongModel>.from(
+        (map['favourites'] ?? []).map<FavSongModel>(
+          (x) => FavSongModel.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
     );
   }
 
@@ -53,7 +67,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(token: $token, name: $name, email: $email, id: $id)';
+    return 'UserModel(token: $token, name: $name, email: $email, id: $id, favourites: $favourites)';
   }
 
   @override
@@ -63,11 +77,16 @@ class UserModel {
     return other.token == token &&
         other.name == name &&
         other.email == email &&
-        other.id == id;
+        other.id == id &&
+        listEquals(other.favourites, favourites);
   }
 
   @override
   int get hashCode {
-    return token.hashCode ^ name.hashCode ^ email.hashCode ^ id.hashCode;
+    return token.hashCode ^
+        name.hashCode ^
+        email.hashCode ^
+        id.hashCode ^
+        favourites.hashCode;
   }
 }

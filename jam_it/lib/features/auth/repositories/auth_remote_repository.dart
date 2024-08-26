@@ -3,7 +3,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:jam_it/core/constants/server_constants.dart';
 import 'package:jam_it/core/failure/failure.dart';
-import 'package:jam_it/features/auth/model/user_model.dart';
+import 'package:jam_it/core/models/user_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_remote_repository.g.dart';

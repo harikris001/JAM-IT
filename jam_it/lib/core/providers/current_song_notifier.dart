@@ -17,35 +17,39 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
     return null;
   }
 
-  void updateSong(SongModel song) async {
-    await audioPlayer?.stop();
-    audioPlayer = AudioPlayer();
+  void updateSong(SongModel? song) async {
+    if (song == null) {
+      state = null;
+    } else {
+      await audioPlayer?.stop();
+      audioPlayer = AudioPlayer();
 
-    final audioSource = AudioSource.uri(
-      Uri.parse(song.song_url),
-      tag: MediaItem(
-        id: song.id,
-        title: song.song_name,
-        artist: song.artist,
-        artUri: Uri.parse(song.thumbnail_url),
-      ),
-    );
+      final audioSource = AudioSource.uri(
+        Uri.parse(song.song_url),
+        tag: MediaItem(
+          id: song.id,
+          title: song.song_name,
+          artist: song.artist,
+          artUri: Uri.parse(song.thumbnail_url),
+        ),
+      );
 
-    audioPlayer!.playerStateStream.listen((state) {
-      if (state.processingState == ProcessingState.completed) {
-        audioPlayer!.seek(Duration.zero);
-        audioPlayer!.pause();
-        isPlaying = false;
+      audioPlayer!.playerStateStream.listen((state) {
+        if (state.processingState == ProcessingState.completed) {
+          audioPlayer!.seek(Duration.zero);
+          audioPlayer!.pause();
+          isPlaying = false;
 
-        this.state = this.state?.copyWith(hex_code: this.state?.hex_code);
-      }
-    });
-    _homeLocalRepository.uploadLocalSong(song);
-    await audioPlayer!.setAudioSource(audioSource);
+          this.state = this.state?.copyWith(hex_code: this.state?.hex_code);
+        }
+      });
+      _homeLocalRepository.uploadLocalSong(song);
+      await audioPlayer!.setAudioSource(audioSource);
 
-    audioPlayer!.play();
-    isPlaying = true;
-    state = song;
+      audioPlayer!.play();
+      isPlaying = true;
+      state = song;
+    }
   }
 
   void playPause() {

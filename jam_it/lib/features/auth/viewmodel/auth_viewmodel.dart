@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:jam_it/core/providers/current_user_notifier.dart';
-import 'package:jam_it/features/auth/model/user_model.dart';
+import 'package:jam_it/core/models/user_model.dart';
 import 'package:jam_it/features/auth/repositories/auth_local_repository.dart';
 import 'package:jam_it/features/auth/repositories/auth_remote_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
