@@ -8,6 +8,7 @@ import 'package:jam_it/core/theme/app_pallete.dart';
 import 'package:jam_it/core/utils/utils.dart';
 import 'package:jam_it/core/widgets/Loader/loader.dart';
 import 'package:jam_it/core/widgets/custom_field.dart';
+import 'package:jam_it/features/home/view/pages/library_page.dart';
 import 'package:jam_it/features/home/view/widgets/audio_wave.dart';
 import 'package:jam_it/features/home/viewmodel/home_viewmodel.dart';
 
@@ -57,13 +58,21 @@ class _UploadSongPageState extends ConsumerState<UploadSongPage> {
               if (formKey.currentState!.validate() &&
                   seletedAudio != null &&
                   selectedImage != null) {
-                ref.read(homeViewModelProvider.notifier).uploadSong(
+                await ref.read(homeViewModelProvider.notifier).uploadSong(
                       audio: seletedAudio!,
                       image: selectedImage!,
                       songName: songNameController.text,
                       artist: artistNameController.text,
                       color: selectedColor,
                     );
+                if (context.mounted) {
+                  snackBarPopUp(context, 'Upload Completed');
+                  Navigator.of(context).pop(
+                    MaterialPageRoute(
+                      builder: (context) => const LibraryPage(),
+                    ),
+                  );
+                }
               } else {
                 snackBarPopUp(context, 'Missing Fields');
               }

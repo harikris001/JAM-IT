@@ -30,69 +30,87 @@ class SongsPage extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 36),
-            height: 280,
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200,
-                childAspectRatio: 3,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-              ),
-              itemCount: recentlyPlayed.length,
-              itemBuilder: (context, index) {
-                final song = recentlyPlayed[index];
-                return GestureDetector(
-                  onTap: () {
-                    ref
-                        .read(currentSongNotifierProvider.notifier)
-                        .updateSong(song);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Pallete.cardColor,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    padding: const EdgeInsets.only(right: 20),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 48,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(song.thumbnail_url),
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(5),
-                              bottomLeft: Radius.circular(5),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Flexible(
-                          child: Text(
-                            song.song_name,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              },
+          const Padding(
+            padding: EdgeInsets.only(top: 35, left: 14),
+            child: Text(
+              "Recent played",
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w700),
             ),
           ),
+          recentlyPlayed.isEmpty
+              ? const SizedBox(
+                  height: 280,
+                  child: Center(
+                      child: Text(
+                    "No songs played Recently.",
+                    style: TextStyle(fontWeight: FontWeight.w300),
+                  )),
+                )
+              : Container(
+                  padding:
+                      const EdgeInsets.only(left: 16, right: 16, bottom: 36),
+                  height: 280,
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200,
+                      childAspectRatio: 3,
+                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 8,
+                    ),
+                    itemCount: recentlyPlayed.length,
+                    itemBuilder: (context, index) {
+                      final song = recentlyPlayed[index];
+                      return GestureDetector(
+                        onTap: () {
+                          ref
+                              .read(currentSongNotifierProvider.notifier)
+                              .updateSong(song);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Pallete.cardColor,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          padding: const EdgeInsets.only(right: 20),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 48,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(song.thumbnail_url),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(5),
+                                    bottomLeft: Radius.circular(5),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Flexible(
+                                child: Text(
+                                  song.song_name,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
           const Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(
-              'Latest Today',
+              'Latest Uploads',
               style: TextStyle(fontSize: 23, fontWeight: FontWeight.w700),
             ),
           ),

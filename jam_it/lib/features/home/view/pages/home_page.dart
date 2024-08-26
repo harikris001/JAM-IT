@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jam_it/core/providers/current_user_notifier.dart';
+import 'package:jam_it/core/providers/current_song_notifier.dart';
 import 'package:jam_it/core/theme/app_pallete.dart';
 import 'package:jam_it/features/home/view/pages/library_page.dart';
+import 'package:jam_it/features/home/view/pages/search_page.dart';
 import 'package:jam_it/features/home/view/pages/songs_page.dart';
 import 'package:jam_it/features/home/view/widgets/music_slab.dart';
 
@@ -19,6 +20,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   final List pages = const [
     SongsPage(),
     LibraryPage(),
+    SearchPage(),
   ];
 
   @override
@@ -27,9 +29,24 @@ class _HomePageState extends ConsumerState<HomePage> {
       body: Stack(
         children: [
           pages[_selectedIndex],
-          const Positioned(
+          Positioned(
             bottom: 0,
-            child: MusicSlab(),
+            child: GestureDetector(
+              onVerticalDragUpdate: (details) async {
+                if (details.delta.dy > 0) {
+                  if (details.delta.dy > 5) {
+                    await ref
+                        .read(currentSongNotifierProvider.notifier)
+                        .audioPlayer!
+                        .stop();
+                    ref
+                        .read(currentSongNotifierProvider.notifier)
+                        .updateSong(null);
+                  }
+                }
+              },
+              child: const MusicSlab(),
+            ),
           ),
         ],
       ),
@@ -53,9 +70,25 @@ class _HomePageState extends ConsumerState<HomePage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('assets/images/library.png'),
+            icon: Image.asset(
+              'assets/images/library.png',
+              color: _selectedIndex == 1
+                  ? Pallete.whiteColor
+                  : Pallete.inactiveBottomBarItemColor,
+            ),
             label: 'Library',
-          )
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              _selectedIndex == 2
+                  ? 'assets/images/search_filled.png'
+                  : 'assets/images/search_unfilled.png',
+              color: _selectedIndex == 2
+                  ? Pallete.whiteColor
+                  : Pallete.inactiveBottomBarItemColor,
+            ),
+            label: 'Search',
+          ),
         ],
       ),
     );
