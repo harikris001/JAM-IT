@@ -64,7 +64,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const HeroImage(),
+                    const HeroImage(
+                      angle: -6,
+                    ),
                     const SizedBox(
                       height: 35,
                     ),

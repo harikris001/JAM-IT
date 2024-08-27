@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:jam_it/core/theme/app_pallete.dart';
 
 class HeroImage extends StatelessWidget {
+  final int angle;
   const HeroImage({
     super.key,
+    required this.angle,
   });
 
   @override
@@ -31,7 +33,7 @@ class HeroImage extends StatelessWidget {
           ],
         ),
         Transform.rotate(
-          angle: -6 * 3.14 / 180,
+          angle: angle * 3.14 / 180,
           child: Opacity(
             opacity: 0.2,
             child: Container(
