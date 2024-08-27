@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jam_it/core/providers/current_song_notifier.dart';
 import 'package:jam_it/core/theme/app_pallete.dart';
+import 'package:jam_it/features/auth/view/widgets/hero_image.dart';
 import 'package:jam_it/features/home/view/pages/library_page.dart';
 import 'package:jam_it/features/home/view/pages/search_page.dart';
 import 'package:jam_it/features/home/view/pages/songs_page.dart';
+import 'package:jam_it/features/home/view/pages/upload_song_page.dart';
 import 'package:jam_it/features/home/view/widgets/music_slab.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -15,7 +17,6 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
 
   final List pages = const [
@@ -27,74 +28,68 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        centerTitle: true,
-        surfaceTintColor: Pallete.backgroundColor,
-        backgroundColor: Pallete.backgroundColor,
-        title: Stack(
-          alignment: AlignmentDirectional.center,
+      drawer: Drawer(
+        child: ListView(
           children: [
-            const Text(
-              'J a m - I T',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            const DrawerHeader(
+                child: HeroImage(
+              angle: 1,
+            )),
+            const SizedBox(
+              height: 20,
             ),
-            Opacity(
-              opacity: 0.5,
-              child: Container(
-                height: 40,
-                width: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: Image.asset(
-                      'assets/images/signup.jpg',
-                    ).image,
+            ListView(
+              shrinkWrap: true,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.cloud_upload_outlined),
+                  title: const Text('Upload Your Song'),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const UploadSongPage(),
+                    ),
                   ),
                 ),
-              ),
+                const ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text('Settings'),
+                ),
+                const ListTile(
+                  leading: Icon(Icons.info),
+                  title: Text('About'),
+                ),
+                const ListTile(
+                  leading: Icon(Icons.web),
+                  title: Text('Support Project on Github'),
+                ),
+              ],
             ),
           ],
         ),
-        actions: [
-          IconButton(
-            onPressed: () => _scaffoldKey.currentState!.openEndDrawer(),
-            icon: const Icon(Icons.menu),
-          )
-        ],
       ),
-      endDrawer: Drawer(
-        child: ListView(),
-      ),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            pages[_selectedIndex],
-            Positioned(
-              bottom: 0,
-              child: GestureDetector(
-                onVerticalDragUpdate: (details) async {
-                  if (details.delta.dy > 0) {
-                    if (details.delta.dy > 5) {
-                      await ref
-                          .read(currentSongNotifierProvider.notifier)
-                          .audioPlayer!
-                          .stop();
-                      ref
-                          .read(currentSongNotifierProvider.notifier)
-                          .updateSong(null);
-                    }
+      body: Stack(
+        children: [
+          pages[_selectedIndex],
+          Positioned(
+            bottom: 0,
+            child: GestureDetector(
+              onVerticalDragUpdate: (details) async {
+                if (details.delta.dy > 0) {
+                  if (details.delta.dy > 5) {
+                    await ref
+                        .read(currentSongNotifierProvider.notifier)
+                        .audioPlayer!
+                        .stop();
+                    ref
+                        .read(currentSongNotifierProvider.notifier)
+                        .updateSong(null);
                   }
-                },
-                child: const MusicSlab(),
-              ),
+                }
+              },
+              child: const MusicSlab(),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,

@@ -115,76 +115,79 @@ class SongsPage extends ConsumerWidget {
             ),
           ),
           ref.watch(getAllSongsProvider).when(
-              data: (songs) {
-                return SizedBox(
-                  height: 260,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      final song = songs[index];
-                      return GestureDetector(
-                        onTap: () {
-                          ref
-                              .read(currentSongNotifierProvider.notifier)
-                              .updateSong(song);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 180,
-                                height: 180,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: NetworkImage(song.thumbnail_url),
-                                    fit: BoxFit.cover,
+                data: (songs) {
+                  return SizedBox(
+                    height: 260,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        final song = songs[index];
+                        return GestureDetector(
+                          onTap: () {
+                            ref
+                                .read(currentSongNotifierProvider.notifier)
+                                .updateSong(song);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 180,
+                                  height: 180,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(song.thumbnail_url),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
-                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                              ),
-                              const SizedBox(height: 5),
-                              SizedBox(
-                                width: 180,
-                                child: Text(
-                                  song.song_name,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    overflow: TextOverflow.ellipsis,
+                                const SizedBox(height: 5),
+                                SizedBox(
+                                  width: 180,
+                                  child: Text(
+                                    song.song_name,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    maxLines: 1,
                                   ),
-                                  maxLines: 1,
                                 ),
-                              ),
-                              SizedBox(
-                                width: 180,
-                                child: Text(
-                                  song.artist,
-                                  style: const TextStyle(
-                                    color: Pallete.subtitleText,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                    overflow: TextOverflow.ellipsis,
+                                SizedBox(
+                                  width: 180,
+                                  child: Text(
+                                    song.artist,
+                                    style: const TextStyle(
+                                      color: Pallete.subtitleText,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    maxLines: 1,
                                   ),
-                                  maxLines: 1,
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    itemCount: songs.length,
-                  ),
-                );
-              },
-              error: (error, stackTrace) {
-                return Center(
-                  child: Text(error.toString()),
-                );
-              },
-              loading: () => const Loader()),
+                        );
+                      },
+                      itemCount: songs.length,
+                    ),
+                  );
+                },
+                error: (error, stackTrace) {
+                  return Center(
+                    child: Text(
+                      error.toString(),
+                    ),
+                  );
+                },
+                loading: () => const Loader(),
+              ),
         ],
       ),
     );
