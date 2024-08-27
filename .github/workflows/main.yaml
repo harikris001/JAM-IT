@@ -1,0 +1,56 @@
+name: "Latest Stable Release"
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    name: "Stable version"
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: jam_it
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'oracle'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: '3.24.0'
+
+      - name: Install dependencies
+        run: flutter pub get
+      
+      - name: Build
+        run: flutter build apk --release
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: JAM-IT stable release
+          path: build/app/outputs/flutter-apk/app-release.apk
+    
+      - name: Extract version from pubspec.yaml
+        id: extract_version
+        run: |
+          version=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | tr -d '\r')
+          echo "VERSION=$version" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/flutter-apk/app-release.apk"
+          tag: v${{ github.run_number }}
