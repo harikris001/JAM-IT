@@ -34,14 +34,14 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
       
-      - name: Build
+      - name: Build Apk
         run: flutter build apk --release
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: JAM-IT stable release
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/apk/release/app-release.apk
     
       - name: Extract version from pubspec.yaml
         id: extract_version
@@ -53,4 +53,4 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "build/app/outputs/apk/release/app-release.apk"
-          tag: v${{ github.run_number }}
+          tag: v${{ steps.extract_version.outputs.VERSION }}
