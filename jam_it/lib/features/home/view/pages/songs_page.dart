@@ -99,7 +99,7 @@ class SongsPage extends ConsumerWidget {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),

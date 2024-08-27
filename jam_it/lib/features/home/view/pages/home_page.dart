@@ -15,6 +15,7 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
 
   final List pages = const [
@@ -26,29 +27,74 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          pages[_selectedIndex],
-          Positioned(
-            bottom: 0,
-            child: GestureDetector(
-              onVerticalDragUpdate: (details) async {
-                if (details.delta.dy > 0) {
-                  if (details.delta.dy > 5) {
-                    await ref
-                        .read(currentSongNotifierProvider.notifier)
-                        .audioPlayer!
-                        .stop();
-                    ref
-                        .read(currentSongNotifierProvider.notifier)
-                        .updateSong(null);
-                  }
-                }
-              },
-              child: const MusicSlab(),
+      key: _scaffoldKey,
+      appBar: AppBar(
+        centerTitle: true,
+        surfaceTintColor: Pallete.backgroundColor,
+        backgroundColor: Pallete.backgroundColor,
+        title: Stack(
+          alignment: AlignmentDirectional.center,
+          children: [
+            const Text(
+              'J a m - I T',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
+            Opacity(
+              opacity: 0.5,
+              child: Container(
+                height: 40,
+                width: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: Image.asset(
+                      'assets/images/signup.jpg',
+                    ).image,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            onPressed: () => _scaffoldKey.currentState!.openEndDrawer(),
+            icon: const Icon(Icons.menu),
+          )
         ],
+      ),
+      endDrawer: Drawer(
+        child: ListView(),
+      ),
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            pages[_selectedIndex],
+            Positioned(
+              bottom: 0,
+              child: GestureDetector(
+                onVerticalDragUpdate: (details) async {
+                  if (details.delta.dy > 0) {
+                    if (details.delta.dy > 5) {
+                      await ref
+                          .read(currentSongNotifierProvider.notifier)
+                          .audioPlayer!
+                          .stop();
+                      ref
+                          .read(currentSongNotifierProvider.notifier)
+                          .updateSong(null);
+                    }
+                  }
+                },
+                child: const MusicSlab(),
+              ),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
