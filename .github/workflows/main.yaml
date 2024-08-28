@@ -47,7 +47,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "jam_it/build/app/outputs/apk/release/*"
-          tag: ${{ steps.read_version.outputs.version-number }}
+          tag: ${{ steps.read-version.outputs.version-number }}
           token: ${{ secrets.TOKEN }}
 
     
