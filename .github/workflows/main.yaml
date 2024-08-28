@@ -19,6 +19,13 @@ jobs:
       - name: Checkout Branch
         uses: actions/checkout@v3
         
+      - name: Get Version Number
+        id: read-version
+        uses: NiklasLehnfeld/flutter-version-number-action@main
+        with: 
+          file-path: jam_it/pubspec.yaml
+        
+        
       - name: Setup Java SDK
         uses: actions/setup-java@v2
         with:
@@ -36,16 +43,11 @@ jobs:
       - name: Build apk for platfroms
         run: flutter build apk --release --split-per-abi
 
-      - name: Extract version from pubspec.yaml
-        run: |
-          version=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | tr -d '\r')
-          echo VERSION=%version% >> %GITHUB_ENV%
-
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
           artifacts: "jam_it/build/app/outputs/apk/release/*"
-          tag: v${{ env.VERSION }}
+          tag: ${{ steps.read_version.outputs.version-number }}
           token: ${{ secrets.TOKEN }}
 
     
