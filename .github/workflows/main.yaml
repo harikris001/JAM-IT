@@ -1,4 +1,4 @@
-name: "Latest Stable Release"
+name: Latest Stable Release
 on:
   pull_request:
     branches:
@@ -6,51 +6,30 @@ on:
   push:
     branches:
       - main
+
 jobs:
   build:
-    name: "Stable version"
+    name: Build and Release new apk
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: jam_it
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Java
-        uses: actions/setup-java@v3
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v2
         with:
-          distribution: 'oracle'
-          java-version: '17'
+          distribution: 'zulu'
+          java-version: '11'
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.24.0'
+      - run: flutter pub get
+      - run: flutter build apk --release --split-per-abi
 
-      - name: Install dependencies
-        run: flutter pub get
-      
-      - name: Build Apk
-        run: flutter build apk --release
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: JAM-IT stable release
-          path: build/app/outputs/apk/release/app-release.apk
-    
-      - name: Extract version from pubspec.yaml
-        id: extract_version
-        run: |
-          version=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | tr -d '\r')
-          echo "VERSION=$version" >> $GITHUB_ENV
-
-      - name: Create Release
+      - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/apk/release/app-release.apk"
-          tag: v${{ steps.extract_version.outputs.VERSION }}
+          artifacts: "build/app/outputs/apk/release/*"
+          tag: v0.0.1
+          token: ${{ secrets.TOKEN }}
+    
+
+    
