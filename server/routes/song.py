@@ -11,7 +11,6 @@ from models.favourite import Favourite
 from models.song import Song
 from database import get_db
 from pydantics_schema.favourite_song import FavouriteSong
-
 router = APIRouter()
 
 @router.post('/upload',status_code=201)
@@ -77,3 +76,9 @@ def list_fav_songs(db: Session = Depends(get_db), auth_dict = Depends(auth_middl
     user_id = auth_dict['uid']
     fav_songs = db.query(Favourite).filter(Favourite.user_id == user_id).options(joinedload(Favourite.song), ).all()
     return fav_songs
+
+
+@router.get('/search/',status_code=200)
+def search_songs(query: str, db: Session = Depends(get_db),auth_dict = Depends(auth_middleware)):
+    songs = db.query(Song).filter(Song.song_name.ilike(f'%{query}%')).limit(10).all()
+    return songs
