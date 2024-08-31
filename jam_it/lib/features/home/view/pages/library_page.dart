@@ -31,6 +31,7 @@ class LibraryPage extends ConsumerWidget {
                       style: TextStyle(fontSize: 20),
                     ),
                     ListView.builder(
+                      shrinkWrap: true,
                       itemCount: data.length,
                       itemBuilder: (context, index) {
                         final song = data[index];
@@ -56,6 +57,7 @@ class LibraryPage extends ConsumerWidget {
                         );
                       },
                     ),
+                    const Expanded(child: SizedBox()),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Pallete.borderColor,
