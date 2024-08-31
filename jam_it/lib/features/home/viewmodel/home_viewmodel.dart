@@ -8,6 +8,7 @@ import 'package:jam_it/features/home/model/fav_song_model.dart';
 import 'package:jam_it/features/home/model/song_model.dart';
 import 'package:jam_it/features/home/repositories/home_local_repository.dart';
 import 'package:jam_it/features/home/repositories/home_repository.dart';
+import 'package:jam_it/features/home/viewmodel/query_viewmodel.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'home_viewmodel.g.dart';
@@ -30,6 +31,20 @@ Future<List<SongModel>> getFavSongs(GetFavSongsRef ref) async {
       ref.watch(currentUserNotifierProvider.select((user) => user!.token));
   final res = await ref.watch(homeRepositoryProvider).getFavSongs(token: token);
 
+  return switch (res) {
+    Left(value: final l) => throw l.message,
+    Right(value: final r) => r,
+  };
+}
+
+@riverpod
+Future<List<SongModel>> getSearchResult(GetSearchResultRef ref) async {
+  final token =
+      ref.watch(currentUserNotifierProvider.select((user) => user!.token));
+  final query = ref.watch(queryNotifierProvider);
+  final res = await ref
+      .watch(homeRepositoryProvider)
+      .getSearchResults(token: token, query: query);
   return switch (res) {
     Left(value: final l) => throw l.message,
     Right(value: final r) => r,
