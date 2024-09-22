@@ -6,6 +6,7 @@ import os
 import uuid
 from middleware.auth_middleware import auth_middleware
 from sqlalchemy.orm import joinedload
+from datetime import datetime
 
 from models.favourite import Favourite
 from models.song import Song
@@ -41,7 +42,8 @@ def upload_song(
         thumbnail_url = thumbnail_result['secure_url'],
         artist = artist,
         song_name = song_name,
-        hex_code = hex_code
+        hex_code = hex_code,
+        upload_date = datetime.now()
     )
 
     db.add(new_song)
@@ -52,7 +54,7 @@ def upload_song(
 
 @router.get('/list')
 def list_songs(db: Session = Depends(get_db), auth_dict = Depends(auth_middleware)):
-    songs = db.query(Song).all()
+    songs = db.query(Song).order_by(Song.upload_date.desc()).all()
     return songs
 
 @router.post('/favourite')
