@@ -1,4 +1,4 @@
-from sqlalchemy import Column, TEXT, VARCHAR
+from sqlalchemy import Column, TEXT, VARCHAR, DATETIME
 from models.base import Base
 
 class Song(Base):
@@ -10,3 +10,4 @@ class Song(Base):
     artist = Column(TEXT)
     song_name = Column(VARCHAR(100))
     hex_code = Column(VARCHAR(6))
+    upload_date = Column(DATETIME)
