@@ -11,4 +11,5 @@ class User(Base):
     email = Column(VARCHAR(255))
     password = Column(LargeBinary)
 
-    favourites = relationship('Favourite', back_populates="user")
+    favourites = relationship('Favourite', back_populates='users')
+    playlist = relationship('Playlist', back_populates='users')
