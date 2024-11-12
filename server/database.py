@@ -1,6 +1,9 @@
 import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+load_dotenv()
 
 # DATABASE_URL = 'postgresql://postgres:hari2001@localhost:5432/jamit'
 DATABASE_URL = os.environ.get("DATABASE_URL")

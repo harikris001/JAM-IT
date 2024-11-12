@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 import cloudinary
 import cloudinary.uploader
 import os
+from dotenv import load_dotenv
 import uuid
 from middleware.auth_middleware import auth_middleware
 from sqlalchemy.orm import joinedload
@@ -12,6 +13,8 @@ from models.song import Song
 from database import get_db
 from pydantics_schema.favourite_song import FavouriteSong
 router = APIRouter()
+
+load_dotenv()
 
 @router.post('/upload',status_code=201)
 def upload_song(
